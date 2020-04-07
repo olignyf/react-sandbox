@@ -39,5 +39,111 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+<div id="pie1"></div>
+<div id="pie2"></div>
+<div id="pie3"></div>
+<div id="pie4"></div>
+<div id="pie5"></div>
+<div id="pie6"></div>
+<div id="pie7"></div>
+<div id="pie1"></div>
+<div id="pie8"></div>
+<script>
+  var myGroup = '<g></g>';
+
+var data1 = [50, 50];
+var data2 = [70, 30];
+var data3 = [16, 84];
+var data4 = [12, 88];
+var data5 = [29, 71];
+var data6 = [15, 85];
+var data7 = [12, 88];
+var data8 = [10, 90];
+
+var width = 100,
+  height = 100,
+  radius = (Math.min(width, height) / 2);
+
+function drawDonut(data, divchart) {
+  var sym = "%"
+
+  var color = ["#BC204B","#00338D"];
+
+  // sort data
+  //data = data.sort(function (a, b) { return b-a; });
+  var pie = d3.pie()
+    .sortValues(null) // both null means NO sort
+    .value(function(d) {
+      return d
+    })(data);
+
+  var arc = d3.arc()
+    .outerRadius(radius - 10)
+    .innerRadius(radius - (radius / 1.9));
+
+  var labelArc = d3.arc()
+    .outerRadius(radius - 31)
+    .innerRadius(radius - 31);
+
+  var svg = d3.select(divchart)
+    .append("svg")
+    .attr("width", width)
+    .attr("height", height)
+    .append("g")
+    .attr("transform", "translate(" + 50 + "," + 50 + ")");
+
+  var g = svg.selectAll("arc")
+    .data(pie)
+    .enter().append("g")
+    .attr("class", "arc");
+
+  function easeInverse(ease) {
+    return function(e) {
+      var min = 0, max = 1;
+      while (max - min > 1e-3) {
+        var mid = (max + min) * 0.5;
+        emid = ease(mid);
+        if (emid > e) { max = mid; }
+        else { min = mid; }
+      }
+      return max;
+    }
+  }
+  var inverseCubic = easeInverse(d3.easeCubic);
+  var oneOver2Pi = 1.0 / (2*Math.PI);
+  var total_msec = 5000;
+
+  g.append("path")
+    .style("fill", function(d, i) { return color[i]; })
+    .transition()
+    .ease(d3.easeLinear)
+    .delay(function (d) { return total_msec * inverseCubic(d.startAngle * oneOver2Pi);})
+    .duration(function (d) { return total_msec * (inverseCubic(d.endAngle * oneOver2Pi) - inverseCubic(d.startAngle * oneOver2Pi));})
+    .attrTween("d", arcTween);
+
+  function arcTween(d) {
+    var i = d3.interpolate(inverseCubic(d.startAngle * oneOver2Pi), inverseCubic(d.endAngle * oneOver2Pi));
+    return function (t) {
+      d.endAngle = 2*Math.PI*d3.easeCubic(i(t));
+      return arc(d);
+    }
+  }
+
+  g.append("g")
+    .attr("transform", "translate(-17,-17) scale(0.7)")
+    .html(myGroup);    
+}
+
+drawDonut(data1, "#pie1")
+drawDonut(data2, "#pie2")
+drawDonut(data3, "#pie3")
+drawDonut(data4, "#pie4")
+drawDonut(data5, "#pie5")
+drawDonut(data6, "#pie6")
+drawDonut(data7, "#pie7")
+drawDonut(data8, "#pie8")
+</script>
   </body>
 </html>
