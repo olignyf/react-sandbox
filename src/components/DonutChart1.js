@@ -34,7 +34,7 @@ class DonutChart extends Component {
     var svg = d3.select("#pieChart").append("svg")
         .attr("width", width)
         .attr("height", height)
-      .append("g")
+        .append("g")
         .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
 
     // Add the background arc, from 0 to 100% (τ).
@@ -46,10 +46,10 @@ class DonutChart extends Component {
     // Add the foreground arc in orange, currently showing 12.7%.
     var foreground = svg.append("path")
         .datum({endAngle: .01 * τ})
-      // .style("fill", "orange")
-      .attr('stroke-width','20px').attr('stroke-linejoin','round').attr('stroke-linecap','round')
+       // .style("fill", "orange")
+        .attr('stroke-width','20px').attr('stroke-linejoin','round').attr('stroke-linecap','round')
         .attr("d", arc)
-      .attr('fill', '#123456').attr('stroke','#123456');
+        .attr('fill', '#123456').attr('stroke','#123456');
 
     // Every so often, start a transition to a new random angle. Use transition.call
     // (identical to selection.call) so that we can encapsulate the logic for
